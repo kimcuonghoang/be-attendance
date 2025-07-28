@@ -1,0 +1,46 @@
+const MESSAGES = {
+  USERS: {
+    USER_NOT_FOUND: "User not found",
+    USER_ALREADY_EXISTS: "User already exists",
+    INVALID_CREDENTIALS: "Invalid credentials",
+    USER_CREATED_SUCCESSFULLY: "User created successfully",
+    USER_UPDATED_SUCCESSFULLY: "User updated successfully",
+    USER_DELETED_SUCCESSFULLY: "User deleted successfully",
+  },
+  MAJORS: {
+    MAJOR_NOT_FOUND: "Major not found",
+    MAJOR_ALREADY_EXISTS: "Major already exists",
+    MAJOR_CREATED_SUCCESSFULLY: "Major created successfully",
+    MAJOR_UPDATED_SUCCESSFULLY: "Major updated successfully",
+    MAJOR_DELETED_SUCCESSFULLY: "Major deleted successfully",
+  },
+  SUBJECTS: {
+    SUBJECT_NOT_FOUND: "Subject not found",
+    SUBJECT_ALREADY_EXISTS: "Subject already exists",
+    SUBJECT_CREATED_SUCCESSFULLY: "Subject created successfully",
+    SUBJECT_UPDATED_SUCCESSFULLY: "Subject updated successfully",
+    SUBJECT_DELETED_SUCCESSFULLY: "Subject deleted successfully",
+  },
+  CLASSES: {
+    CLASS_NOT_FOUND: "Class not found",
+    CLASS_ALREADY_EXISTS: "Class already exists",
+    CLASS_CREATED_SUCCESSFULLY: "Class created successfully",
+    CLASS_UPDATED_SUCCESSFULLY: "Class updated successfully",
+    CLASS_DELETED_SUCCESSFULLY: "Class deleted successfully",
+  },
+  SESSIONS: {
+    SESSION_NOT_FOUND: "Session not found",
+    SESSION_ALREADY_EXISTS: "Session already exists",
+    SESSION_CREATED_SUCCESSFULLY: "Session created successfully",
+    SESSION_UPDATED_SUCCESSFULLY: "Session updated successfully",
+    SESSION_DELETED_SUCCESSFULLY: "Session deleted successfully",
+  },
+  ATTENDANCES: {
+    ATTENDANCE_NOT_FOUND: "Attendance not found",
+    ATTENDANCE_ALREADY_EXISTS: "Attendance already exists",
+    ATTENDANCE_CREATED_SUCCESSFULLY: "Attendance created successfully",
+    ATTENDANCE_UPDATED_SUCCESSFULLY: "Attendance updated successfully",
+    ATTENDANCE_DELETED_SUCCESSFULLY: "Attendance deleted successfully",
+  },
+};
+export default MESSAGES;
