@@ -1,4 +1,12 @@
 const MESSAGES = {
+  AUTH: {
+    LOGIN_SUCCESS: "Login successful",
+    LOGIN_FAILED: "Login failed",
+    LOGOUT_SUCCESS: "Logout successful",
+    REGISTER_SUCCESS: "Registration successful",
+    REGISTER_FAILED: "Registration failed",
+    EMAIL_ALREADY_EXISTS: "Email already exists",
+  },
   USERS: {
     USER_NOT_FOUND: "User not found",
     USER_ALREADY_EXISTS: "User already exists",

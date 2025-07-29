@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { DB_URI, PORT } from "./enviroments.js";
+import { DB_URI } from "./environments.js";
 
 async function connectDB() {
   try {

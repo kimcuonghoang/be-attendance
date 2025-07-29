@@ -4,7 +4,7 @@ import router from "./src/routes/index.js";
 import cors from "cors";
 
 import connectDB from "./src/common/configs/db.js";
-import { HOST, PORT } from "./src/common/configs/enviroments.js";
+import { HOST, PORT } from "./src/common/configs/environments.js";
 import setupSwagger from "./src/common/configs/swagger-config.js";
 import jsonValidator from "./src/common/middleware/json.middleware.js";
 import notFoundHandler from "./src/common/middleware/notFound.middleware.js";

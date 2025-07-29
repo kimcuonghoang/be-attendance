@@ -1,5 +1,5 @@
 import swaggerAutogen from "swagger-autogen";
-import { HOST, PORT } from "./enviroments.js";
+import { HOST, PORT } from "./environments.js";
 
 const outputFile = "./src/common/configs/swagger-output.json";
 const endpointsFiles = ["./src/routes/index.js"];
