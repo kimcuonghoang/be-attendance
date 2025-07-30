@@ -6,6 +6,8 @@ const MESSAGES = {
     REGISTER_SUCCESS: "Registration successful",
     REGISTER_FAILED: "Registration failed",
     EMAIL_ALREADY_EXISTS: "Email already exists",
+    EMAIL_NOT_FOUND: "Email not found",
+    PASSWORD_INCORRECT: "Password is incorrect",
   },
   USERS: {
     USER_NOT_FOUND: "User not found",
