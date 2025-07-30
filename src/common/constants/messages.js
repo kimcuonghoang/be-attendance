@@ -8,6 +8,13 @@ const MESSAGES = {
     EMAIL_ALREADY_EXISTS: "Email already exists",
     EMAIL_NOT_FOUND: "Email not found",
     PASSWORD_INCORRECT: "Password is incorrect",
+    REFRESH_TOKEN_SUCCESS: "Refresh token successful",
+    REFRESH_TOKEN_FAILED: "Refresh token failed",
+    REFRESH_TOKEN_NOT_FOUND: "Refresh token not found",
+    REFRESH_TOKEN_INVALID: "Refresh token is invalid",
+    FORGOT_PASSWORD_SUCCESS: "Forgot password successful",
+    FORGOT_PASSWORD_FAILED: "Forgot password failed",
+    RESET_PASSWORD_SUCCESS: "Reset password successful",
   },
   USERS: {
     USER_NOT_FOUND: "User not found",

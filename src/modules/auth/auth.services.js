@@ -9,10 +9,10 @@ import {
   generateUsername,
 } from "../../common/utils/codeGenerate.js";
 import createError from "../../common/utils/error.js";
-import { signToken } from "../../common/utils/token.js";
+import { signToken, verifyToken } from "../../common/utils/token.js";
 
 export const registerService = async (dataRegister) => {
-  const { email, password, fullname, role } = dataRegister;
+  const { email, password, fullname } = dataRegister;
   if (!email || !password || !fullname) {
     throw createError(400, MESSAGES.AUTH.REGISTER_FAILED);
   }
@@ -48,3 +48,20 @@ export const loginService = async (dataLogin) => {
   user.password = undefined;
   return { user, accessToken, refreshToken };
 };
+export const refreshTokenService = async (req) => {
+  const refreshToken =
+    req.body.refreshToken ||
+    req.headers["x-refresh-token"] ||
+    req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return createError(400, MESSAGES.AUTH.REFRESH_TOKEN_NOT_FOUND);
+  }
+  const { valid, decoded } = verifyToken(refreshToken);
+  if (valid) {
+    const accessToken = signToken({ id: decoded.id }, "1d");
+    const newRefreshToken = signToken({ id: decoded.id }, "30d");
+    return { accessToken, refreshToken: newRefreshToken };
+  }
+};
+export const forgotPasswordService = async (email) => {};
