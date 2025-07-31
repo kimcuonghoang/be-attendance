@@ -23,7 +23,6 @@ export const createMajorService = async (dataMajor) => {
   }
 
   const newMajor = await Major.create(dataMajor);
-  console.log(newMajor);
   return newMajor;
 };
 // Cập nhật chuyên ngành
@@ -52,8 +51,8 @@ export const deleteMajorService = async (id) => {
     throw createError(404, MESSAGES.MAJORS.MAJOR_NOT_FOUND);
   }
 
-  await Major.findOneAndDelete({ _id: id });
-  return MESSAGES.MAJORS.MAJOR_DELETED_SUCCESSFULLY;
+  const deleteMajor = await Major.findOneAndDelete({ _id: id });
+  return deleteMajor;
 };
 
 // Lấy chuyên ngành theo ID
@@ -71,9 +70,9 @@ export const softDeleteMajorService = async (id) => {
     throw createError(404, MESSAGES.MAJORS.MAJOR_NOT_FOUND);
   }
 
-  existingMajor.deletedAt = true;
-  await existingMajor.save();
-  return MESSAGES.MAJORS.MAJOR_DELETED_SUCCESSFULLY;
+  existingMajor.isDeleted = true;
+  const softDeleteMajor = await existingMajor.save();
+  return softDeleteMajor;
 };
 
 // Phục hồi chuyên ngành đã xóa mềm
@@ -82,7 +81,7 @@ export const restoreMajorService = async (id) => {
   if (!existingMajor) {
     throw createError(404, MESSAGES.MAJORS.MAJOR_NOT_FOUND);
   }
-  existingMajor.deletedAt = false;
-  await existingMajor.save();
-  return MESSAGES.MAJORS.MAJOR_UPDATED_SUCCESSFULLY;
+  existingMajor.isDeleted = false;
+  const restoreMajor = await existingMajor.save();
+  return restoreMajor;
 };

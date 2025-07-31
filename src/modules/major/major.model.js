@@ -15,6 +15,9 @@ const majorSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    isDeleted: {
+      type: Boolean,
+    },
     deletedAt: {
       type: Date,
       default: null,

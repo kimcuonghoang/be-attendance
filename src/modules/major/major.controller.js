@@ -48,22 +48,36 @@ export const updateMajorController = handleAsync(async (req, res, next) => {
 export const deleteMajorController = handleAsync(async (req, res, next) => {
   const { id } = req.params;
   const message = await deleteMajorService(id);
-  console.log(message);
   res.json(
-    createResponse(true, 200, MESSAGES.MAJORS.MAJOR_DELETED_SUCCESSFULLY)
+    createResponse(
+      true,
+      200,
+      MESSAGES.MAJORS.MAJOR_DELETED_SUCCESSFULLY,
+      message
+    )
   );
 });
 export const softDeleteMajorController = handleAsync(async (req, res, next) => {
   const { id } = req.params;
   const major = await softDeleteMajorService(id);
   res.json(
-    createResponse(true, 200, MESSAGES.MAJORS.MAJOR_UPDATED_SUCCESSFULLY, major)
+    createResponse(
+      true,
+      200,
+      MESSAGES.MAJORS.MAJOR_SOFT_DELETED_SUCCESSFULLY,
+      major
+    )
   );
 });
 export const restoreMajorController = handleAsync(async (req, res, next) => {
   const { id } = req.params;
   const major = await restoreMajorService(id);
   res.json(
-    createResponse(true, 200, MESSAGES.MAJORS.MAJOR_UPDATED_SUCCESSFULLY, major)
+    createResponse(
+      true,
+      200,
+      MESSAGES.MAJORS.MAJOR_RESTORED_SUCCESSFULLY,
+      major
+    )
   );
 });

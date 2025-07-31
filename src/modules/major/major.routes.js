@@ -18,6 +18,6 @@ majorRoutes.get("/:id", getMajorByIdController);
 majorRoutes.post("/", validBodyRequest(majorSchema), createMajorController);
 majorRoutes.patch("/:id", validBodyRequest(majorSchema), updateMajorController);
 majorRoutes.delete("/:id", deleteMajorController);
-majorRoutes.patch("/:id", softDeleteMajorController);
-majorRoutes.patch("/:id", restoreMajorController);
+majorRoutes.patch("/soft-delete/:id", softDeleteMajorController);
+majorRoutes.patch("/restore/:id", restoreMajorController);
 export default majorRoutes;
