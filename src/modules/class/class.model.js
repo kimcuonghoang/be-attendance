@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ShiftEnum } from "../../common/constants/enum.js";
+import { ShiftEnum } from "../../common/constants/enums.js";
 
 const classSchema = new mongoose.Schema(
   {

@@ -25,6 +25,11 @@ const MESSAGES = {
     USER_DELETED_SUCCESSFULLY: "User deleted successfully",
   },
   MAJORS: {
+    GET_ALL_SUCCESS: "All majors fetched successfully",
+    GET_BY_ID_SUCCESS: "Major fetched successfully",
+    CREATE_FAILED: "Failed to create major, please check your input",
+    CREATE_SUCCESS: "Major created successfully",
+    UPDATE_FAILED: "Failed to update major, please check your input",
     MAJOR_NOT_FOUND: "Major not found",
     MAJOR_ALREADY_EXISTS: "Major already exists",
     MAJOR_CREATED_SUCCESSFULLY: "Major created successfully",
@@ -39,6 +44,8 @@ const MESSAGES = {
     SUBJECT_DELETED_SUCCESSFULLY: "Subject deleted successfully",
   },
   CLASSES: {
+    CREATE_FAILED: "Failed to create class, please check your input",
+    UPDATE_FAILED: "Failed to update class, please check your input",
     CLASS_NOT_FOUND: "Class not found",
     CLASS_ALREADY_EXISTS: "Class already exists",
     CLASS_CREATED_SUCCESSFULLY: "Class created successfully",

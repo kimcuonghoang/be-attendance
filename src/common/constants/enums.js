@@ -1,5 +1,5 @@
 export const RoleEnum = {
-  SUPER_ADMIN: "superAdmin",
+  SUPER_ADMIN: "admin",
   TEACHER: "teacher",
   STUDENT: "student",
 };
