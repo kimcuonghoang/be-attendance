@@ -5,9 +5,6 @@ import Major from "./major.model.js";
 // Lấy tất cả chuyên ngành
 export const getAllMajorsService = async () => {
   const majors = await Major.find();
-  if (majors.length === 0) {
-    throw createError(404, MESSAGES.MAJORS.MAJOR_NOT_FOUND);
-  }
   return majors;
 };
 // Tạo mới chuyên ngành
@@ -27,8 +24,8 @@ export const createMajorService = async (dataMajor) => {
 };
 // Cập nhật chuyên ngành
 export const updateMajorService = async (id, dataUpdate) => {
-  const { name, description } = dataUpdate;
-  if (!name || !description) {
+  const { code, name, description } = dataUpdate;
+  if (!name || !description || !code) {
     throw createError(400, MESSAGES.MAJORS.UPDATE_FAILED);
   }
 
@@ -37,9 +34,7 @@ export const updateMajorService = async (id, dataUpdate) => {
     throw createError(404, MESSAGES.MAJORS.MAJOR_NOT_FOUND);
   }
 
-  existingMajor.name = name;
-  existingMajor.description = description;
-
+  Object.assign(existingMajor, dataUpdate);
   const updatedMajor = await existingMajor.save();
   return updatedMajor;
 };

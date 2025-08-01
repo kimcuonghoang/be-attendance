@@ -14,6 +14,7 @@ const MESSAGES = {
     REFRESH_TOKEN_INVALID: "Token làm mới không hợp lệ",
     FORGOT_PASSWORD_SUCCESS: "Yêu cầu quên mật khẩu thành công",
     FORGOT_PASSWORD_FAILED: "Yêu cầu quên mật khẩu thất bại",
+    PASSWORD_CHANGE_FAILED: "Thay đổi mật khẩu thất bại!",
     RESET_PASSWORD_SUCCESS: "Đặt lại mật khẩu thành công",
   },
   USERS: {
@@ -53,6 +54,8 @@ const MESSAGES = {
     SUBJECT_RESTORED_SUCCESSFULLY: "Khôi phục môn học thành công",
   },
   CLASSES: {
+    GET_ALL_SUCCESS: "Lấy danh sách lớp học thành công",
+    GET_BY_ID_SUCCESS: "Lấy thông tin lớp học thành công",
     CREATE_FAILED: "Tạo lớp học thất bại, vui lòng kiểm tra lại thông tin",
     UPDATE_FAILED: "Cập nhật lớp học thất bại, vui lòng kiểm tra lại thông tin",
     CLASS_NOT_FOUND: "Không tìm thấy lớp học",
@@ -62,6 +65,11 @@ const MESSAGES = {
     CLASS_DELETED_SUCCESSFULLY: "Xóa lớp học thành công",
   },
   SESSIONS: {
+    GET_ALL_SUCCESS: "Lấy danh sách buổi học thành công",
+    GET_BY_ID_SUCCESS: "Lấy thông tin buổi học thành công",
+    CREATE_FAILED: "Tạo buổi học thất bại, vui lòng kiểm tra lại thông tin",
+    UPDATE_FAILED:
+      "Cập nhật buổi học thất bại, vui lòng kiểm tra lại thông tin",
     SESSION_NOT_FOUND: "Không tìm thấy buổi học",
     SESSION_ALREADY_EXISTS: "Buổi học đã tồn tại",
     SESSION_CREATED_SUCCESSFULLY: "Tạo buổi học thành công",

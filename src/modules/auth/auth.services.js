@@ -10,6 +10,12 @@ import {
 } from "../../common/utils/codeGenerate.js";
 import createError from "../../common/utils/error.js";
 import { signToken, verifyToken } from "../../common/utils/token.js";
+import { FRONTEND_URL } from "../../common/configs/environments.js";
+import {
+  generatePasswordResetSuccessEmail,
+  generateResetPasswordEmail,
+} from "./auth.view.js";
+import sendEmail from "../../common/utils/sendEmail.js";
 
 export const registerService = async (dataRegister) => {
   const { email, password, fullname } = dataRegister;
@@ -64,4 +70,42 @@ export const refreshTokenService = async (req) => {
     return { accessToken, refreshToken: newRefreshToken };
   }
 };
-export const forgotPasswordService = async (email) => {};
+export const forgotPasswordService = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw createError(400, MESSAGES.AUTH.EMAIL_NOT_FOUND);
+  }
+  const resetToken = signToken({ id: user._id, role: user.role }, "15m");
+  const resetLink = `${FRONTEND_URL}/reset-password/${resetToken}`;
+  await sendResetPasswordEmail(email, resetLink);
+  return true;
+};
+
+export const sendResetPasswordEmail = async (
+  email,
+  resetLink,
+  expriresIn = "15 phút"
+) => {
+  const subject = "Yêu cầu đặt lại mật khẩu";
+  const html = generateResetPasswordEmail(resetLink, expriresIn);
+  await sendEmail(email, subject, { html });
+};
+export const sendPasswordResetSuccessEmail = async (email) => {
+  const subject = "Mật khẩu đã được đặt lại";
+  const html = generatePasswordResetSuccessEmail();
+
+  await sendEmail(email, subject, { html });
+};
+export const resetPasswordService = async (resetToken, newPassword) => {
+  const decoded = verifyToken(resetToken);
+  console.log(decoded);
+  const user = await User.findById(decoded.decoded.id);
+  console.log(user);
+  if (!user) {
+    throw createError(400, MESSAGES.AUTH.EMAIL_NOT_FOUND);
+  }
+  user.password = await hashPassword(newPassword);
+  await user.save();
+  await sendPasswordResetSuccessEmail(user.email);
+  return true;
+};

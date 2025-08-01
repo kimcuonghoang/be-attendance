@@ -5,6 +5,8 @@ import {
   createSubjectService,
   deleteSubjectService,
   getAllSubjectService,
+  getSubjectByIdService,
+  restoreSubjectService,
   softDeleteSubjectService,
   updateSubjectService,
 } from "./subject.service.js";
