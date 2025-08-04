@@ -1,5 +1,6 @@
 const MESSAGES = {
   AUTH: {
+    ACCESS_DENIED: "Truy cập bị từ chối",
     LOGIN_SUCCESS: "Đăng nhập thành công",
     LOGIN_FAILED: "Đăng nhập thất bại",
     LOGOUT_SUCCESS: "Đăng xuất thành công",
@@ -16,8 +17,12 @@ const MESSAGES = {
     FORGOT_PASSWORD_FAILED: "Yêu cầu quên mật khẩu thất bại",
     PASSWORD_CHANGE_FAILED: "Thay đổi mật khẩu thất bại!",
     RESET_PASSWORD_SUCCESS: "Đặt lại mật khẩu thành công",
+    INVALID_TOKEN: "Token không hợp lệ",
+    NOT_AUTHENTICATED: "Không được xác thực",
+    FORBIDDEN: "Không đủ quyền",
   },
   USERS: {
+    GET_TEACHER_SUCCESS: "Lấy danh sách thành công",
     USER_NOT_FOUND: "Không tìm thấy người dùng",
     USER_ALREADY_EXISTS: "Người dùng đã tồn tại",
     INVALID_CREDENTIALS: "Thông tin đăng nhập không hợp lệ",

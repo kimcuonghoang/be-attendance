@@ -49,6 +49,7 @@ const userSchema = new mongoose.Schema(
       { key: { email: 1 }, unique: true },
       { key: { username: 1 }, unique: true },
       { key: { studentId: 1 }, unique: true, sparse: true },
+      { key: { majorId: 1 } },
     ],
   }
 );

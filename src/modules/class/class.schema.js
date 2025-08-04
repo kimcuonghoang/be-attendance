@@ -7,13 +7,13 @@ const classSchema = z.object({
   name: z.string().nonempty("Class name is required"),
   teacherId: z.string().nonempty("Teacher ID is required"),
   studentIds: z.array(z.string()).optional(),
- 
+
   totalSessions: z
     .number()
     .int()
     .positive("Total sessions must be a positive integer"),
   shift: z.enum(Object.values(ShiftEnum), "Invalid shift value"),
-  deletedAt: z.date().optional(),
+  deletedAt: z.date().nullable(),
 });
 
 export default classSchema;

@@ -4,6 +4,7 @@ import Class from "./class.model.js";
 
 export const getAllClassesService = async () => {
   const classes = await Class.find()
+    .populate("majorId")
     .populate("subjectId")
     .populate({ path: "teacherId", select: "_id fullname" });
 
@@ -16,7 +17,8 @@ export const getAllClassesService = async () => {
 export const getClassByIdService = async (id) => {
   const classData = await Class.findById(id)
     .populate("subjectId")
-    .populate("teacherId");
+    .populate("teacherId")
+    .populate("majorId");
   if (!classData) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
