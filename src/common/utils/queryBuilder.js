@@ -1,3 +1,5 @@
+import createError from "./error";
+
 export const queryBuilder = async (Model, queryParams, options = {}) => {
   const {
     page = 1,
@@ -31,5 +33,21 @@ export const queryBuilder = async (Model, queryParams, options = {}) => {
 
   const pageNum = parseInt(page, 10);
   const limitNum = parseInt(limit, 10);
-  const skip = ()
+  const skip = (pageNum - 1) * limitNum;
+
+  const total = await Model.countDocuments(queryCounditions);
+  const data = await query.exec();
+  if (!data || data.length === 0) {
+    throw createError(400, "Not Found");
+  }
+
+  return {
+    data,
+    meta: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
+    },
+  };
 };
