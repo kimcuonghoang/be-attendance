@@ -2,7 +2,6 @@ import { queryBuilder } from "../../common/utils/queryBuilder.js";
 import Subject from "./subject.model.js";
 import { generateSubjectCode } from "./subject.utils.js";
 
-// Create a new subject
 export const createSubjectService = async (data) => {
   const subject = await Subject.create({
     ...data,
@@ -11,7 +10,6 @@ export const createSubjectService = async (data) => {
   return subject;
 };
 
-// Get all subjects (with optional inclusion of soft-deleted records)
 export const getAllSubjectService = async (query) => {
   const { includeDeleted = false, ...queryParams } = query;
   const data = await queryBuilder(Subject, {
@@ -22,12 +20,10 @@ export const getAllSubjectService = async (query) => {
   return data;
 };
 
-// Get a subject by ID
 export const getSubjectByIdService = async (id) => {
   return await Subject.findOne({ _id: id, deletedAt: null });
 };
 
-// Update a subject
 export const updateSubjectService = async (id, data) => {
   if (!data.englishName) {
     throw new Error("English name là bắt buộc");
@@ -44,7 +40,6 @@ export const updateSubjectService = async (id, data) => {
   );
 };
 
-// Soft delete a subject
 export const softDeleteSubjectService = async (id) => {
   return await Subject.findOneAndUpdate(
     { _id: id, deletedAt: null },
@@ -53,7 +48,6 @@ export const softDeleteSubjectService = async (id) => {
   );
 };
 
-// Restore a soft-deleted subject
 export const restoreSubjectService = async (id) => {
   return await Subject.findOneAndUpdate(
     { _id: id, deletedAt: { $ne: null } },
@@ -62,7 +56,6 @@ export const restoreSubjectService = async (id) => {
   );
 };
 
-// Delete a subject permanently (not soft delete)
 export const deleteSubjectService = async (id) => {
   return await Subject.findOneAndDelete({ _id: id, deletedAt: null });
 };

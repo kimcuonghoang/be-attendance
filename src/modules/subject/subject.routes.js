@@ -2,7 +2,7 @@ import express from "express";
 import {
   createSubjectController,
   deleteSubjectController,
-  getAllSubjectController,
+  getAllSubjectsController,
   getSubjectByIdController,
   restoreSubjectController,
   softDeleteSubjectController,
@@ -18,11 +18,9 @@ import validBodyRequest from "../../common/middleware/validBody.middleware.js";
 
 const subjectRoutes = express.Router();
 
-// Public routes (accessible to all authenticated users)
-subjectRoutes.get("/", getAllSubjectController);
+subjectRoutes.get("/", getAllSubjectsController);
 subjectRoutes.get("/:id", getSubjectByIdController);
 
-// SuperAdmin routes (restricted to superAdmin role)
 subjectRoutes.use(verifyUser);
 subjectRoutes.use(restrictTo(RoleEnum.SUPER_ADMIN));
 subjectRoutes.post(

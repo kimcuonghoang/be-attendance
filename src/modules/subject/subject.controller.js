@@ -1,4 +1,5 @@
 import MESSAGES from "../../common/constants/messages.js";
+import createError from "../../common/utils/error.js";
 import handleAsync from "../../common/utils/handleAsync.js";
 import createResponse from "../../common/utils/response.js";
 import {
@@ -11,72 +12,67 @@ import {
   updateSubjectService,
 } from "./subject.service.js";
 
-export const getAllSubjectController = handleAsync(async (req, res, next) => {
-  const subjects = await getAllSubjectService();
-
-  return createResponse(true, 200, MESSAGES.SUBJECTS.GET_ALL_SUCCESS, subjects);
+export const createSubjectController = handleAsync(async (req, res) => {
+  const subject = await createSubjectService(req.body);
+  return createResponse(res, 201, MESSAGES.SUBJECTS.CREATE_SUCCESS, subject);
 });
-export const getSubjectByIdController = handleAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const subject = await getSubjectByIdService(id);
 
-  return createResponse(res, 200, MESSAGES.SUBJECTS.GET_BY_ID_SUCCESS, subject);
-});
-export const createSubjectController = handleAsync(async (req, res, next) => {
-  const dataCreate = req.body;
-  const newSubject = await createSubjectService(dataCreate);
-
+export const getAllSubjectsController = handleAsync(async (req, res) => {
+  const subjects = await getAllSubjectService(req.query);
+  if (!subjects) createError(400, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
   return createResponse(
     res,
-    201,
-    MESSAGES.SUBJECTS.SUBJECT_CREATED_SUCCESSFULLY,
-    newSubject
+    200,
+    MESSAGES.SUBJECTS.GET_ALL_SUCCESS,
+    subjects.data,
+    subjects.meta
   );
 });
-export const updateSubjectController = handleAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const dataUpdate = req.body;
-  const updatedSubject = await updateSubjectService(id, dataUpdate);
 
+export const getSubjectByIdController = handleAsync(async (req, res) => {
+  const subject = await getSubjectByIdService(req.params.id);
+  if (!subject) createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
+  return createResponse(res, 200, MESSAGES.SUBJECTS.GET_BY_ID_SUCCESS, subject);
+});
+
+export const updateSubjectController = handleAsync(async (req, res) => {
+  const subject = await updateSubjectService(req.params.id, req.body);
+  if (!subject) createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
   return createResponse(
     res,
     200,
     MESSAGES.SUBJECTS.SUBJECT_UPDATED_SUCCESSFULLY,
-    updatedSubject
+    subject
   );
 });
-export const deleteSubjectController = handleAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const deletedSubject = await deleteSubjectService(id);
 
+export const softDeleteSubjectController = handleAsync(async (req, res) => {
+  const subject = await softDeleteSubjectService(req.params.id);
+  if (!subject) createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
   return createResponse(
     res,
     200,
-    MESSAGES.SUBJECTS.SUBJECT_DELETED_SUCCESSFULLY,
-    deletedSubject
+    MESSAGES.SUBJECTS.SUBJECT_SOFT_DELETED_SUCCESSFULLY
   );
 });
-export const softDeleteSubjectController = handleAsync(
-  async (req, res, next) => {
-    const { id } = req.params;
-    const message = await softDeleteSubjectService(id);
 
-    return createResponse(
-      res,
-      200,
-      MESSAGES.SUBJECTS.SUBJECT_SOFT_DELETED_SUCCESSFULLY,
-      message
-    );
-  }
-);
-export const restoreSubjectController = handleAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const subject = await restoreSubjectService(id);
-
+export const restoreSubjectController = handleAsync(async (req, res) => {
+  const subject = await restoreSubjectService(req.params.id);
+  if (!subject) createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
   return createResponse(
     res,
     200,
     MESSAGES.SUBJECTS.SUBJECT_RESTORED_SUCCESSFULLY,
     subject
+  );
+});
+
+export const deleteSubjectController = handleAsync(async (req, res) => {
+  const subject = await deleteSubjectService(req.params.id);
+  if (!subject) createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
+  return createResponse(
+    res,
+    200,
+    MESSAGES.SUBJECTS.SUBJECT_DELETED_SUCCESSFULLY
   );
 });
