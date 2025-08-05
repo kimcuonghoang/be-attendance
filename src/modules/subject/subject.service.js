@@ -1,81 +1,68 @@
-import MESSAGES from "../../common/constants/messages.js";
-import createError from "../../common/utils/error.js";
+import { queryBuilder } from "../../common/utils/queryBuilder.js";
 import Subject from "./subject.model.js";
+import { generateSubjectCode } from "./subject.utils.js";
 
-export const getAllSubjectService = async () => {
-  const subjects = await Subject.find();
-  if (!subjects) {
-    throw createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
-  }
-  return subjects;
-};
-export const getSubjectByIdService = async (id) => {
-  const subject = await Subject.findById(id);
-  if (!subject) {
-    throw createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
-  }
+// Create a new subject
+export const createSubjectService = async (data) => {
+  const subject = await Subject.create({
+    ...data,
+    code: await generateSubjectCode(data.englishName),
+  });
   return subject;
 };
 
-export const createSubjectService = async (dataCreate) => {
-  const { name, code, description, englishName } = dataCreate;
-  if (!name || !code) {
-    throw createError(400, MESSAGES.SUBJECTS.CREATE_FAILED);
-  }
-  const existingSubject = await Subject.findOne({ code });
-  if (existingSubject) {
-    throw createError(400, MESSAGES.SUBJECTS.SUBJECT_ALREADY_EXISTS);
-  }
-  const newSubject = await Subject.create({
-    name,
-    code,
-    description,
-    englishName,
+// Get all subjects (with optional inclusion of soft-deleted records)
+export const getAllSubjectService = async (query) => {
+  const { includeDeleted = false, ...queryParams } = query;
+  const data = await queryBuilder(Subject, {
+    ...queryParams,
+    includeDeleted: includeDeleted === "true",
+    searchFields: ["name", "code", "englishName", "description"],
   });
-  return newSubject;
+  return data;
 };
 
-export const updateSubjectService = async (id, dataUpdate) => {
-  const { name, code, description, englishName } = dataUpdate;
-  if (!name || !code) {
-    throw createError(400, MESSAGES.SUBJECTS.UPDATE_FAILED);
-  }
-  const existingSubject = await Subject.findById(id);
-  if (!existingSubject) {
-    throw createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
-  }
-  existingSubject.name = name;
-  existingSubject.code = code;
-  existingSubject.description = description;
-  existingSubject.englishName = englishName;
+// Get a subject by ID
+export const getSubjectByIdService = async (id) => {
+  return await Subject.findOne({ _id: id, deletedAt: null });
+};
 
-  const updatedSubject = await existingSubject.save();
-  return updatedSubject;
-};
-export const deleteSubjectService = async (id) => {
-  const existingSubject = await Subject.findById(id);
-  if (!existingSubject) {
-    throw createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
+// Update a subject
+export const updateSubjectService = async (id, data) => {
+  if (!data.englishName) {
+    throw new Error("English name là bắt buộc");
   }
-  const deletedSubject = await Subject.findOneAndDelete({ _id: id });
-  return deletedSubject;
+  return await Subject.findOneAndUpdate(
+    { _id: id, deletedAt: null },
+    {
+      ...data,
+      code: await generateSubjectCode(data.englishName),
+    },
+    {
+      new: true,
+    }
+  );
 };
+
+// Soft delete a subject
 export const softDeleteSubjectService = async (id) => {
-  const existingSubject = await Subject.findById(id);
-  if (!existingSubject) {
-    throw createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
-  }
-  existingSubject.deletedAt = new Date();
-  const updatedSubject = await existingSubject.save();
-  return updatedSubject;
+  return await Subject.findOneAndUpdate(
+    { _id: id, deletedAt: null },
+    { $set: { deletedAt: new Date() } },
+    { new: true }
+  );
 };
-export const restoreSubjectService = async (id) => {
-  const existingSubject = await Subject.findById(id);
-  if (!existingSubject) {
-    throw createError(404, MESSAGES.SUBJECTS.SUBJECT_NOT_FOUND);
-  }
-  existingSubject.deletedAt = null;
 
-  const restoredSubject = await existingSubject.save();
-  return restoredSubject;
+// Restore a soft-deleted subject
+export const restoreSubjectService = async (id) => {
+  return await Subject.findOneAndUpdate(
+    { _id: id, deletedAt: { $ne: null } },
+    { $set: { deletedAt: null } },
+    { new: true }
+  );
+};
+
+// Delete a subject permanently (not soft delete)
+export const deleteSubjectService = async (id) => {
+  return await Subject.findOneAndDelete({ _id: id, deletedAt: null });
 };
