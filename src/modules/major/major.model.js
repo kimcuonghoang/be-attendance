@@ -8,7 +8,6 @@ const majorSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     code: {
       type: String,

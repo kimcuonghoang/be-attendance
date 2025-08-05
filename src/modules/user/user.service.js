@@ -5,3 +5,5 @@ export const getListTeacherService = async (role) => {
   const users = await User.find(filter);
   return users;
 };
+
+export const createUserService = async () => {};

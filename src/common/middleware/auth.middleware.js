@@ -1,6 +1,6 @@
 import MESSAGES from "../constants/messages.js";
 import createError from "../utils/error.js";
-import { verifyToken } from "../utils/token";
+import { verifyToken } from "../utils/token.js";
 import User from "../../modules/user/user.model.js";
 export const verifyUser = async (req, res, next) => {
   const authHeaders = req.headers.authorization;

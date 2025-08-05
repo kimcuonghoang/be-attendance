@@ -1,71 +1,102 @@
+import mongoose from "mongoose";
 import MESSAGES from "../../common/constants/messages.js";
 import createError from "../../common/utils/error.js";
 import Class from "./class.model.js";
-
-export const getAllClassesService = async () => {
-  const classes = await Class.find()
-    .populate("majorId")
-    .populate("subjectId")
-    .populate({ path: "teacherId", select: "_id fullname" });
-
-  if (!classes) {
-    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
-  }
-  return classes;
+import { generateSessionDates } from "./class.utils.js";
+import Session from "../session/session.model.js";
+import { queryBuilder } from "../../common/utils/queryBuilder.js";
+import { populate } from "dotenv";
+export const getAllClassesService = async (query) => {
+  const { includeDeleted = false, ...queryParams } = query;
+  const data = await queryBuilder(
+    Class,
+    {
+      ...queryParams,
+      includeDeleted: includeDeleted === "true",
+      searchFields: ["name", "teacherId", "subjectId", "majorId"],
+    },
+    {
+      populate: [
+        { path: "teacherId", select: "name" },
+        { path: "subjectId", select: "name" },
+        { path: "majorId", select: "name" },
+      ],
+    }
+  );
+  return data;
 };
 
-export const getClassByIdService = async (id) => {
-  const classData = await Class.findById(id)
-    .populate("subjectId")
-    .populate("teacherId")
-    .populate("majorId");
-  if (!classData) {
-    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
-  }
-  return classData;
+export const getClassByIdService = async (id, data) => {
+  return await Class.findOne(
+    { _id: id, deletedAt: null },
+    { $set: data },
+    { new: true, runValidators: true }
+  ).populate("subjectId majorId teacherId studentIds");
 };
 
 export const createClassService = async (dataCreate) => {
-  const { subjectId, majorId, name, teacherId } = dataCreate;
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const { totalSessions, startDate, daysOfWeek } = dataCreate;
+    if (!totalSessions || !startDate || !daysOfWeek) {
+      throw createError(400, "Thiếu totalSessions , startDate hoặc daysOfWeek");
+    }
+    const classInstance = await Class.create([dataCreate], { session });
+    const createdClass = classInstance[0];
+    const datesOfWeek = daysOfWeek.split(",").map(Number);
 
-  if (!subjectId || !majorId || !name || !teacherId) {
-    throw createError(400, MESSAGES.CLASSES.CREATE_FAILED);
+    const sessionDates = generateSessionDates(
+      new Date(startDate),
+      totalSessions,
+      datesOfWeek
+    );
+    const sessions = sessionDates.map((sessionDates) => ({
+      classId: createdClass._id,
+      sessionDates,
+      note: "",
+    }));
+
+    await Session.insertMany(sessions, { session });
+
+    await session.commitTransaction();
+    session.endSession();
+    return classInstance[0];
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw createError(
+      error.status || 500,
+      error.message || "Faild to create class"
+    );
   }
-
-  const existingClass = await Class.findOne({
-    subjectId,
-    majorId,
-    name,
-    teacherId,
-  });
-  if (existingClass) {
-    throw createError(400, MESSAGES.CLASSES.CLASS_ALREADY_EXISTS);
-  }
-
-  const newClass = await Class.create(dataCreate);
-  return newClass;
 };
 
 export const updateClassService = async (id, dataUpdate) => {
-  const { subjectId, majorId, name, teacherId } = dataUpdate;
-  if (!subjectId || !majorId || !name || !teacherId) {
-    throw createError(400, MESSAGES.CLASSES.UPDATE_FAILED);
-  }
-
-  const existingClass = await Class.findById(id);
-  if (!existingClass) {
-    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
-  }
-
-  Object.assign(existingClass, dataUpdate);
-  const updatedClass = await existingClass.save();
-  return updatedClass;
+  return await Class.findByIdAndUpdate(
+    { _id: id, deletedAt: null },
+    { $set: { deletedAt: new Date() } },
+    { new: true }
+  );
+};
+export const softDeleteClassService = async (id) => {
+  return await Class.findByIdAndUpdate(
+    { _id: id, deletedAt: null },
+    { $set: { deletedAt: new Date() } },
+    { new: true }
+  );
 };
 
+export const restoreClassService = async (id) => {
+  return await Class.findByIdAndUpdate(
+    { _id: id, deletedAt: null },
+    { $set: { deletedAt: new Date() } },
+    { new: true }
+  ).populate("subjectId majorId teacherId studentIds");
+};
 export const deleteClassService = async (id) => {
-  const deletedClass = await Class.findByIdAndDelete(id);
-  if (!deletedClass) {
-    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
-  }
-  return deletedClass;
+  return await Class.findByIdAndDelete(
+    { _id: id, deleteAt: null },
+    { new: true }
+  );
 };

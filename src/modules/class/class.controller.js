@@ -6,26 +6,36 @@ import {
   deleteClassService,
   getAllClassesService,
   getClassByIdService,
+  restoreClassService,
+  softDeleteClassService,
   updateClassService,
 } from "./class.service.js";
+import createError from "../../common/utils/error.js";
 
 export const getAllClassesController = handleAsync(async (req, res) => {
-  const classes = await getAllClassesService();
+  const classes = await getAllClassesService(req.query);
   res.json(
-    createResponse(true, 200, MESSAGES.CLASSES.GET_ALL_SUCCESS, classes)
+    createResponse(
+      true,
+      200,
+      MESSAGES.CLASSES.GET_ALL_SUCCESS,
+      classes.data,
+      classes.meta
+    )
   );
 });
 export const getClassByIdController = handleAsync(async (req, res) => {
-  const { id } = req.params;
-  const classData = await getClassByIdService(id);
+  const classInstance = await getClassByIdService(req.params.id);
+  if (!classInstance) {
+    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
+  }
   res.json(
     createResponse(true, 200, MESSAGES.CLASSES.GET_BY_ID_SUCCESS, classData)
   );
 });
 
 export const createClassController = handleAsync(async (req, res, next) => {
-  const dataCreate = req.body;
-  const newClass = await createClassService(dataCreate);
+  const newClass = await createClassService(req.body);
   res.json(
     createResponse(
       true,
@@ -37,27 +47,60 @@ export const createClassController = handleAsync(async (req, res, next) => {
 });
 
 export const updateClassController = handleAsync(async (req, res) => {
-  const { id } = req.params;
-  const dataUpdate = req.body;
-  const updatedClass = await updateClassService(id, dataUpdate);
+  const classInstance = await updateClassService(req.params.id, req.body);
+  if (!classInstance) {
+    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
+  }
   res.json(
     createResponse(
       true,
       200,
       MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
-      updatedClass
+      classInstance
+    )
+  );
+});
+
+export const softDeleteClassController = handleAsync(async (req, res) => {
+  const classInstance = await softDeleteClassService(req.params.id);
+  if (!classInstance) {
+    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
+  }
+  return res.json(
+    createResponse(
+      true,
+      200,
+      MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
+      classInstance
+    )
+  );
+});
+
+export const restoreClassController = handleAsync(async (req, res) => {
+  const classInstance = await restoreClassService(req.params.id);
+  if (!classInstance) {
+    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
+  }
+  return res.json(
+    createResponse(
+      true,
+      200,
+      MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
+      classInstance
     )
   );
 });
 export const deleteClassController = handleAsync(async (req, res) => {
-  const { id } = req.params;
-  const deletedClass = await deleteClassService(id);
-  res.json(
+  const classInstance = await deleteClassService(req.params.id);
+  if (!classInstance) {
+    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
+  }
+  return res.json(
     createResponse(
       true,
       200,
       MESSAGES.CLASSES.CLASS_DELETED_SUCCESSFULLY,
-      deletedClass
+      classInstance
     )
   );
 });

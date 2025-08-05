@@ -13,7 +13,7 @@ const classSchema = z.object({
     .int()
     .positive("Total sessions must be a positive integer"),
   shift: z.enum(Object.values(ShiftEnum), "Invalid shift value"),
-  deletedAt: z.date().nullable(),
+  deletedAt: z.date().nullable().optional(),
 });
 
 export default classSchema;
