@@ -1,73 +1,62 @@
-import MESSAGES from "../../common/constants/messages.js";
-import createResponse from "./../../common/utils/response.js";
 import handleAsync from "../../common/utils/handleAsync.js";
+import MESSAGES from "../../common/constants/messages.js";
+
+import createError from "../../common/utils/error.js";
 import {
   createSessionService,
-  deleteSessionService,
-  getAllSessionsService,
-  getSessionByIdService,
-  updateSessionService,
+  getAllSessionsByClassId,
+  getSessionById,
+  updateSessionById,
+  deleteSessionById,
 } from "./session.service.js";
+import createResponse from "../../common/utils/response.js";
+export const createSessionForClassController = handleAsync(async (req, res) => {
+  const session = await createSessionService(req.body);
+  if (!session) createError(400, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
+  return createResponse(
+    res,
+    201,
+    MESSAGES.SESSIONS.SESSION_CREATED_SUCCESSFULLY,
+    session
+  );
+});
 
-export const getAllSessionController = handleAsync(async (req, res) => {
-  const sessions = await getAllSessionsService();
-  res.json(
-    createResponse(
-      true,
+export const getAllSessionsByClassIdController = handleAsync(
+  async (req, res) => {
+    const sessions = await getAllSessionsByClassId(req.params.classId);
+    return createResponse(
+      res,
       200,
       MESSAGES.SESSIONS.GET_ALL_SUCCESS,
       sessions
-    )
-  );
-});
-export const getSessionByIdController = handleAsync(async (req, res) => {
-  const { id } = req.params;
-  const session = await getSessionByIdService(id);
-  res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.SESSIONS.GET_BY_ID_SUCCESS,
-      session
-    )
-  );
-});
-export const createSessionController = handleAsync(async (req, res) => {
-  const dataCreate = req.body;
-  const newSession = await createSessionService(dataCreate);
-  res
-    .status(201)
-    .json(
-      createResponse(
-        true,
-        201,
-        MESSAGES.SESSIONS.SESSION_CREATED_SUCCESSFULLY,
-        newSession
-      )
     );
+  }
+);
+
+export const getSessionByIdController = handleAsync(async (req, res) => {
+  const session = await getSessionById(req.params.id);
+  if (!session) createError(400, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
+  return createResponse(res, 200, MESSAGES.SESSIONS.GET_BY_ID_SUCCESS, session);
 });
-export const updateSessionController = handleAsync(async (req, res) => {
-  const { id } = req.params;
-  const dataUpdate = req.body;
-  const updatedSession = await updateSessionService(id, dataUpdate);
-  res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.SESSIONS.SESSION_UPDATED_SUCCESSFULLY,
-      updatedSession
-    )
+
+export const updateSessionByIdController = handleAsync(async (req, res) => {
+  const session = await updateSessionById(req.params.id, req.body);
+  if (!session) createError(400, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
+  return createResponse(
+    res,
+    200,
+    MESSAGES.SESSIONS.SESSION_UPDATED_SUCCESSFULLY,
+    session
   );
 });
-export const deleteSessionController = handleAsync(async (req, res) => {
-  const { id } = req.params;
-  const deletedSession = await deleteSessionService(id);
-  res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.SESSIONS.SESSION_DELETED_SUCCESSFULLY,
-      deletedSession
-    )
+
+export const deleteSessionByIdController = handleAsync(async (req, res) => {
+  const session = await deleteSessionById(req.params.id);
+  if (!session) createError(400, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
+  return createResponse(
+    res,
+    200,
+    MESSAGES.SESSIONS.SESSION_DELETED_SUCCESSFULLY,
+    session
   );
 });

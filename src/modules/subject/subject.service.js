@@ -11,10 +11,10 @@ export const createSubjectService = async (data) => {
 };
 
 export const getAllSubjectService = async (query) => {
-  const { includeDeleted = false, ...queryParams } = query;
+  const { includeDeleted = true, ...queryParams } = query;
   const data = await queryBuilder(Subject, {
     ...queryParams,
-    includeDeleted: includeDeleted === "true",
+    includeDeleted: includeDeleted === true,
     searchFields: ["name", "code", "englishName", "description"],
   });
   return data;

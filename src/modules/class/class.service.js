@@ -5,19 +5,19 @@ import Class from "./class.model.js";
 import { generateSessionDates } from "./class.utils.js";
 import Session from "../session/session.model.js";
 import { queryBuilder } from "../../common/utils/queryBuilder.js";
-import { populate } from "dotenv";
+
 export const getAllClassesService = async (query) => {
-  const { includeDeleted = false, ...queryParams } = query;
+  const { includeDeleted = true, ...queryParams } = query;
   const data = await queryBuilder(
     Class,
     {
       ...queryParams,
-      includeDeleted: includeDeleted === "true",
+      includeDeleted: includeDeleted === true,
       searchFields: ["name", "teacherId", "subjectId", "majorId"],
     },
     {
       populate: [
-        { path: "teacherId", select: "name" },
+        { path: "teacherId", select: "fullname" },
         { path: "subjectId", select: "name" },
         { path: "majorId", select: "name" },
       ],
@@ -89,11 +89,12 @@ export const softDeleteClassService = async (id) => {
 
 export const restoreClassService = async (id) => {
   return await Class.findByIdAndUpdate(
-    { _id: id, deletedAt: null },
-    { $set: { deletedAt: new Date() } },
+    { _id: id, deletedAt: { $ne: null } },
+    { $set: { deletedAt: null } },
     { new: true }
   ).populate("subjectId majorId teacherId studentIds");
 };
+
 export const deleteClassService = async (id) => {
   return await Class.findByIdAndDelete(
     { _id: id, deleteAt: null },

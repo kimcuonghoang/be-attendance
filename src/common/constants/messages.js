@@ -46,6 +46,7 @@ const MESSAGES = {
     MAJOR_RESTORED_SUCCESSFULLY: "Khôi phục chuyên ngành thành công",
   },
   SUBJECTS: {
+    CREATE_SUCCESS: "Tạo mới môn học thành công",
     GET_ALL_SUCCESS: "Lấy danh sách môn học thành công",
     GET_BY_ID_SUCCESS: "Lấy thông tin môn học thành công",
     CREATE_FAILED: "Tạo môn học thất bại, vui lòng kiểm tra lại thông tin",

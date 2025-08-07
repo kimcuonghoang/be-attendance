@@ -1,23 +1,41 @@
-import { Router } from "express";
+import express from "express";
 import {
   createMajorController,
   deleteMajorController,
   getAllMajorsController,
+  getMajorByIdController,
   restoreMajorController,
   softDeleteMajorController,
   updateMajorController,
-  getMajorByIdController,
 } from "./major.controller.js";
+import {
+  restrictTo,
+  verifyUser,
+} from "./../../common/middleware/auth.middleware.js";
+import { RoleEnum } from "../../common/constants/enums.js";
+import { createMajorSchema, updateMajorSchema } from "./major.schema.js";
 import validBodyRequest from "../../common/middleware/validBody.middleware.js";
-import { majorSchema } from "./major.schema.js";
+const majorRoutes = express.Router();
 
-const majorRoutes = Router();
-
+// Public
 majorRoutes.get("/", getAllMajorsController);
 majorRoutes.get("/:id", getMajorByIdController);
-majorRoutes.post("/", validBodyRequest(majorSchema), createMajorController);
-majorRoutes.patch("/:id", validBodyRequest(majorSchema), updateMajorController);
-majorRoutes.delete("/:id", deleteMajorController);
+
+// Private
+majorRoutes.use(verifyUser);
+majorRoutes.use(restrictTo(RoleEnum.SUPER_ADMIN));
+majorRoutes.post(
+  "/",
+  validBodyRequest(createMajorSchema),
+  createMajorController
+);
+majorRoutes.patch(
+  "/:id",
+  validBodyRequest(updateMajorSchema),
+  updateMajorController
+);
 majorRoutes.patch("/soft-delete/:id", softDeleteMajorController);
 majorRoutes.patch("/restore/:id", restoreMajorController);
+majorRoutes.delete("/:id", deleteMajorController);
+
 export default majorRoutes;

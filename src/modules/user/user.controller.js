@@ -6,7 +6,10 @@ import { getListTeacherService } from "./user.service.js";
 export const getListTeacherController = handleAsync(async (req, res, next) => {
   const { role } = req.query;
   const dataTeacher = await getListTeacherService(role);
-  return res.json(
-    createResponse(true, 200, MESSAGES.USERS.GET_TEACHER_SUCCESS, dataTeacher)
+  return createResponse(
+    res,
+    200,
+    MESSAGES.USERS.GET_TEACHER_SUCCESS,
+    dataTeacher
   );
 });

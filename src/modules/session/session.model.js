@@ -7,7 +7,7 @@ const sessionSchema = new mongoose.Schema(
       ref: "Class",
       required: true,
     },
-    sessionDate: {
+    sessionDates: {
       type: Date,
       required: true,
     },

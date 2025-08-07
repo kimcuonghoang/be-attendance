@@ -4,7 +4,7 @@ import { verifyToken } from "../utils/token.js";
 import User from "../../modules/user/user.model.js";
 export const verifyUser = async (req, res, next) => {
   const authHeaders = req.headers.authorization;
-  if (!authHeaders || !authHeaders.startWith("Bearer")) {
+  if (!authHeaders || !authHeaders.startsWith("Bearer")) {
     return next(createError(401, MESSAGES.AUTH.ACCESS_DENIED));
   }
   const token = authHeaders.split(" ")[1];
@@ -16,6 +16,7 @@ export const verifyUser = async (req, res, next) => {
     const user = await User.findById(decoded.decoded.id).select(
       "role deleteAt"
     );
+
     if (!user || user.deleteAt) {
       return next(401, "Tài khoản không tồi tại hoặc đã bị xóa");
     }
@@ -25,7 +26,7 @@ export const verifyUser = async (req, res, next) => {
     if (error.name === "TokenExpiredError") {
       return next(createError(401, "Token đã hết hạn"));
     }
-    if (error.name === "TokenExpiredError") {
+    if (error.name === "JsonWebTokenError") {
       return next(createError(401, "Token không hợp lệ"));
     }
 

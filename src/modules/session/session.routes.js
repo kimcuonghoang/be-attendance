@@ -1,17 +1,37 @@
-import { Router } from "express";
+import express from "express";
+import { RoleEnum } from "./../../common/constants/enums.js";
 import {
-  createSessionController,
-  deleteSessionController,
-  getAllSessionController,
+  restrictTo,
+  verifyUser,
+} from "./../../common/middleware/auth.middleware.js";
+import { createSessionSchema, updateSessionSchema } from "./session.schema.js";
+import {
+  createSessionForClassController,
+  deleteSessionByIdController,
+  getAllSessionsByClassIdController,
   getSessionByIdController,
-  updateSessionController,
+  updateSessionByIdController,
 } from "./session.controller.js";
+import validBodyRequest from "../../common/middleware/validBody.middleware.js";
+const sessionRoutes = express.Router();
 
-const sessionRoutes = Router();
-sessionRoutes.get("/", getAllSessionController);
-sessionRoutes.post("/", createSessionController);
-
+// Public
+sessionRoutes.get("/classid/:classId", getAllSessionsByClassIdController);
 sessionRoutes.get("/:id", getSessionByIdController);
-sessionRoutes.patch("/:id", updateSessionController);
-sessionRoutes.delete("/:id", deleteSessionController);
+
+// private
+sessionRoutes.use(verifyUser);
+sessionRoutes.use(restrictTo(RoleEnum.SUPER_ADMIN));
+sessionRoutes.post(
+  "/",
+  validBodyRequest(createSessionSchema),
+  createSessionForClassController
+);
+sessionRoutes.patch(
+  "/:id",
+  validBodyRequest(updateSessionSchema),
+  updateSessionByIdController
+);
+sessionRoutes.delete("/:id", deleteSessionByIdController);
+
 export default sessionRoutes;

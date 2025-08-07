@@ -1,6 +1,8 @@
 import createResponse from "./../../common/utils/response.js";
 import handleAsync from "../../common/utils/handleAsync.js";
 import MESSAGES from "../../common/constants/messages.js";
+
+import createError from "../../common/utils/error.js";
 import {
   createClassService,
   deleteClassService,
@@ -10,18 +12,16 @@ import {
   softDeleteClassService,
   updateClassService,
 } from "./class.service.js";
-import createError from "../../common/utils/error.js";
 
 export const getAllClassesController = handleAsync(async (req, res) => {
   const classes = await getAllClassesService(req.query);
-  res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.CLASSES.GET_ALL_SUCCESS,
-      classes.data,
-      classes.meta
-    )
+  createResponse(
+    res,
+
+    200,
+    MESSAGES.CLASSES.GET_ALL_SUCCESS,
+    classes.data,
+    classes.meta
   );
 });
 export const getClassByIdController = handleAsync(async (req, res) => {
@@ -29,20 +29,16 @@ export const getClassByIdController = handleAsync(async (req, res) => {
   if (!classInstance) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
-  res.json(
-    createResponse(true, 200, MESSAGES.CLASSES.GET_BY_ID_SUCCESS, classData)
-  );
+  createResponse(res, 200, MESSAGES.CLASSES.GET_BY_ID_SUCCESS, classData);
 });
 
 export const createClassController = handleAsync(async (req, res, next) => {
   const newClass = await createClassService(req.body);
-  res.json(
-    createResponse(
-      true,
-      201,
-      MESSAGES.CLASSES.CLASS_CREATED_SUCCESSFULLY,
-      newClass
-    )
+  createResponse(
+    res,
+    201,
+    MESSAGES.CLASSES.CLASS_CREATED_SUCCESSFULLY,
+    newClass
   );
 });
 
@@ -51,13 +47,12 @@ export const updateClassController = handleAsync(async (req, res) => {
   if (!classInstance) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
-  res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
-      classInstance
-    )
+  createResponse(
+    res,
+
+    200,
+    MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
+    classInstance
   );
 });
 
@@ -66,13 +61,11 @@ export const softDeleteClassController = handleAsync(async (req, res) => {
   if (!classInstance) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
-  return res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
-      classInstance
-    )
+  return createResponse(
+    res,
+    200,
+    MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
+    classInstance
   );
 });
 
@@ -81,13 +74,12 @@ export const restoreClassController = handleAsync(async (req, res) => {
   if (!classInstance) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
-  return res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
-      classInstance
-    )
+  return createResponse(
+    res,
+
+    200,
+    MESSAGES.CLASSES.CLASS_UPDATED_SUCCESSFULLY,
+    classInstance
   );
 });
 export const deleteClassController = handleAsync(async (req, res) => {
@@ -95,12 +87,11 @@ export const deleteClassController = handleAsync(async (req, res) => {
   if (!classInstance) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
-  return res.json(
-    createResponse(
-      true,
-      200,
-      MESSAGES.CLASSES.CLASS_DELETED_SUCCESSFULLY,
-      classInstance
-    )
+  return createResponse(
+    res,
+
+    200,
+    MESSAGES.CLASSES.CLASS_DELETED_SUCCESSFULLY,
+    classInstance
   );
 });

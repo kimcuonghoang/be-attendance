@@ -4,6 +4,8 @@ import {
   deleteClassController,
   getAllClassesController,
   getClassByIdController,
+  restoreClassController,
+  softDeleteClassController,
   updateClassController,
 } from "./class.controller.js";
 import validBodyRequest from "./../../common/middleware/validBody.middleware.js";
@@ -26,6 +28,9 @@ classRoutes.use(restrictTo(RoleEnum.SUPER_ADMIN));
 
 classRoutes.post("/", validBodyRequest(classSchema), createClassController);
 classRoutes.patch("/:id", validBodyRequest(classSchema), updateClassController);
+
+classRoutes.patch("/soft-delete/:id", softDeleteClassController);
+classRoutes.patch("/restore/:id", restoreClassController);
 classRoutes.delete("/:id", deleteClassController);
 
 export default classRoutes;
