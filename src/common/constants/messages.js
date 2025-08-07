@@ -29,6 +29,10 @@ const MESSAGES = {
     USER_CREATED_SUCCESSFULLY: "Tạo người dùng thành công",
     USER_UPDATED_SUCCESSFULLY: "Cập nhật người dùng thành công",
     USER_DELETED_SUCCESSFULLY: "Xóa người dùng thành công",
+    UNAUTHORIZED: "Không có quyền truy cập",
+    UPDATE_USER_ROLE: "Cập nhật role thành công",
+    USER_RETRIEVED_SUCCESS: "Đã lấy người dùng thành công",
+    GET_SUCCESS: "Lấy danh sách người dùng thành công",
   },
   MAJORS: {
     GET_ALL_SUCCESS: "Lấy danh sách chuyên ngành thành công",
