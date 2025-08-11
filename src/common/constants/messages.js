@@ -87,6 +87,7 @@ const MESSAGES = {
     SESSION_DELETED_SUCCESSFULLY: "Xóa buổi học thành công",
   },
   ATTENDANCES: {
+    ATTENDANCE_GET_SUCCESS: "Lấy thông tin điểm danh thành công",
     ATTENDANCE_NOT_FOUND: "Không tìm thấy điểm danh",
     ATTENDANCE_ALREADY_EXISTS: "Điểm danh đã tồn tại",
     ATTENDANCE_CREATED_SUCCESSFULLY: "Tạo điểm danh thành công",

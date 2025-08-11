@@ -44,7 +44,7 @@ export const loginService = async (dataLogin) => {
   if (!user) {
     throw createError(400, MESSAGES.AUTH.EMAIL_NOT_FOUND);
   }
-  const isMatch = comparePassword(password, user.password);
+  const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
     throw createError(400, MESSAGES.AUTH.PASSWORD_INCORRECT);
   }
