@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
     },
     schoolYear: {
       type: String,
-      default: new Date().getFullYear().toString(),
+      default: () => new Date().getFullYear().toString(),
     },
     majorId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema(
     studentId: {
       type: String,
       unique: true,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
   },
   {

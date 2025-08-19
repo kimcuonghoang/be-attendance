@@ -12,7 +12,7 @@ export const getAllClassesService = async (query) => {
     Class,
     {
       ...queryParams,
-      includeDeleted: includeDeleted === true,
+     
       searchFields: ["name", "teacherId", "subjectId", "majorId"],
     },
     {

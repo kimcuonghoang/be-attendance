@@ -5,21 +5,9 @@ import {
   blockUser,
   getAllUsers,
   getUserById,
-  getUserByRoleService,
   updateProfile,
   updateUserRole,
 } from "./user.service.js";
-
-export const getUserByRoleController = handleAsync(async (req, res, next) => {
-  const { role } = req.query;
-  const dataTeacher = await getUserByRoleService(role);
-  return createResponse(
-    res,
-    200,
-    MESSAGES.USERS.GET_TEACHER_SUCCESS,
-    dataTeacher
-  );
-});
 
 export const updateRoleController = handleAsync(async (req, res) => {
   const { userId } = req.params;

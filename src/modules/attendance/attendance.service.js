@@ -36,7 +36,7 @@ export const checkAttendanceStatus = async (sessionId, user) => {
   };
 };
 
-export const createAttendance = async (DataTransfer, user) => {
+export const createAttendance = async (data, user) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
@@ -106,6 +106,7 @@ export const createAttendance = async (DataTransfer, user) => {
     session.endSession();
     return createAttendances;
   } catch (error) {
+    console.log(error);
     await session.abortTransaction();
     session.endSession();
     throw createError(

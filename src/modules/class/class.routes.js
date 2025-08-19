@@ -22,7 +22,7 @@ const classRoutes = Router();
 classRoutes.get("/", getAllClassesController);
 classRoutes.get("/:id", getClassByIdController);
 
-// SuperAdmin routes (restricted to superAdmin role)
+// admin routes (restricted to admin role)
 classRoutes.use(verifyUser);
 classRoutes.use(restrictTo(RoleEnum.SUPER_ADMIN));
 

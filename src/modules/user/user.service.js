@@ -8,13 +8,6 @@ import {
 import { randomPassword } from "./../../common/utils/handlePassword.js";
 import { queryBuilder } from "./../../common/utils/queryBuilder.js";
 
-export const getUserByRoleService = async (role) => {
-  const filter = {};
-  if (role) filter.role = role;
-  const users = await User.find(filter);
-  return users;
-};
-
 // * Update user role
 export const updateUserRole = async (userId, role) => {
   const user = await User.findById(userId);
@@ -22,7 +15,7 @@ export const updateUserRole = async (userId, role) => {
     throw createError(404, "User not found");
   }
 
-  if (role === "superAdmin") {
+  if (role === "admin") {
     throw createError(400, MESSAGES.USERS.UNAUTHORIZED);
   }
 
@@ -92,11 +85,16 @@ export const createUser = async (userData) => {
 
 export const getAllUsers = async (query) => {
   const { includeDeleted = false, ...queryParams } = query;
-  const data = await queryBuilder(User, {
-    ...queryParams,
-    includeDeleted: includeDeleted === "true",
-    searchFields: ["fullname", "email", "username"],
-  });
+  const data = await queryBuilder(
+    User,
+    {
+      ...queryParams,
+      searchFields: ["fullname", "email", "username", "studentId"],
+    },
+    {
+      populate: [{ path: "majorId", select: "name code" }],
+    }
+  );
 
   return data;
 };

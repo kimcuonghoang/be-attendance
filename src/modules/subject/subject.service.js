@@ -14,7 +14,7 @@ export const getAllSubjectService = async (query) => {
   const { includeDeleted = true, ...queryParams } = query;
   const data = await queryBuilder(Subject, {
     ...queryParams,
-    includeDeleted: includeDeleted === true,
+
     searchFields: ["name", "code", "englishName", "description"],
   });
   return data;

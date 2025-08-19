@@ -3,7 +3,6 @@ import {
   blockUserController,
   createUserController,
   getAllUsersController,
-  getUserByRoleController,
   getProfileController,
   getUserController,
   updateProfileController,
@@ -21,7 +20,6 @@ import {
 } from "./use.schema.js";
 
 const userRoutes = Router();
-userRoutes.get("/", getUserByRoleController);
 
 userRoutes.use(verifyUser);
 userRoutes.get("/profile/me", getProfileController);
@@ -31,7 +29,7 @@ userRoutes.patch(
   updateProfileController
 );
 
-// * Kiểm tra user phải có quyền superAdmin
+// * Kiểm tra user phải có quyền admin
 userRoutes.use(restrictTo(["admin"]));
 userRoutes.post("/", validBodyRequest(createUserSchema), createUserController);
 userRoutes.get("/:userId", getUserController);

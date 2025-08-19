@@ -5,7 +5,7 @@ import userRoutes from "../modules/user/user.routes.js";
 import subjectRoutes from "../modules/subject/subject.routes.js";
 import majorRoutes from "../modules/major/major.routes.js";
 import classRoutes from "../modules/class/class.routes.js";
-import attendanceRoutes from "../modules/attendace/attendance.routes.js";
+import attendanceRoutes from "../modules/attendance/attendance.routes.js";
 
 const routes = Router();
 routes.use("/auth", authRoutes);

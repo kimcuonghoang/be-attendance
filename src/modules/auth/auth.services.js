@@ -98,7 +98,9 @@ export const sendPasswordResetSuccessEmail = async (email) => {
 };
 export const resetPasswordService = async (resetToken, newPassword) => {
   const decoded = verifyToken(resetToken);
+  console.log(decoded);
   const user = await User.findById(decoded.decoded.id);
+  console.log(user);
   if (!user) {
     throw createError(400, MESSAGES.AUTH.EMAIL_NOT_FOUND);
   }

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ShiftEnum } from "../../common/constants/enums.js";
+import { RoomEnum, ShiftEnum } from "../../common/constants/enums.js";
 
 const classSchema = new mongoose.Schema(
   {
@@ -38,10 +38,18 @@ const classSchema = new mongoose.Schema(
     totalSessions: {
       type: Number,
       required: true,
+      min: 1,
+      max: 100,
+      default: 100,
     },
     shift: {
       type: String,
       enum: Object.values(ShiftEnum),
+      required: true,
+    },
+    room: {
+      type: String,
+      enum: Object.values(RoomEnum),
       required: true,
     },
     deletedAt: {
@@ -51,6 +59,11 @@ const classSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    maxStudents: {
+      type: Number,
+      min: 1,
+      default: 100,
     },
   },
   {
