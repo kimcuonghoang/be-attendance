@@ -3,6 +3,7 @@ import handleAsync from "../../common/utils/handleAsync.js";
 import createResponse from "../../common/utils/response.js";
 import {
   blockUser,
+  createUserService,
   getAllUsers,
   getUserById,
   updateProfile,
@@ -57,7 +58,7 @@ export const updateProfileController = handleAsync(async (req, res) => {
 });
 
 export const createUserController = handleAsync(async (req, res) => {
-  const data = await createUser(req.body);
+  const data = await createUserService(req.body);
   return createResponse(
     res,
     201,

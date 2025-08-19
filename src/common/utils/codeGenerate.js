@@ -39,7 +39,7 @@ export const generateUsername = async (fullname) => {
 
 export const generateStudentId = async () => {
   const currentYear = new Date().getFullYear().toString().slice(-2);
-  const prelix = `SV${currentYear}`;
+  const prelix = `CF${currentYear}`;
   const regex = new RegExp(`^${prelix}\\d{3}$`);
   const existingId = await User.find({ studentId: regex })
     .select("studentId")

@@ -70,7 +70,7 @@ export const updateProfile = async (userId, profileData) => {
 };
 
 // * Create a new user
-export const createUser = async (userData) => {
+export const createUserService = async (userData) => {
   userData.username = await generateUsername(userData.fullname);
   if (userData.role === "student" || !userData.role) {
     userData.studentId = await generateStudentId();
