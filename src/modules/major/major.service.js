@@ -7,7 +7,7 @@ export const createMajorService = async (data) => {
 };
 
 export const getAllMajorsService = async (query) => {
-  const { includeDeleted = true, ...queryParams } = query;
+  const { includeDeleted = false, ...queryParams } = query;
   const data = await queryBuilder(Major, {
     ...queryParams,
     searchFields: ["name", "code", "description"],

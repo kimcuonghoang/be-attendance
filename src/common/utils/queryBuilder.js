@@ -8,16 +8,24 @@ export const queryBuilder = async (Model, queryParams, options = {}) => {
     order = "desc",
     search,
     searchFields = [],
-    includeDeleted = false,
+    isDeleted,
     ...filters
   } = queryParams;
+
+  const { populate = [] } = options;
 
   // Xây dựng điều kiện truy vấn
   const queryConditions = {};
 
-  // Xử lý soft delete
-  if (!includeDeleted) {
+  // * Nếu không truyền isDeleted (undefined) thì lấy tất cả dữ liệu chưa xoá mềm và đã xoá mềm
+  // * Nếu truyền isDeleted là false thì chỉ lấy dữ liệu chưa xoá mềm
+  if (isDeleted === "false") {
     queryConditions.deletedAt = null;
+  }
+
+  //* Nếu truyền isDeleted là true thì chỉ lấy cả dữ liệu đã xoá mềm
+  if (isDeleted === "true") {
+    queryConditions.deletedAt = { $ne: null };
   }
 
   // Áp dụng bộ lọc từ query parameters
@@ -37,6 +45,18 @@ export const queryBuilder = async (Model, queryParams, options = {}) => {
 
   // Tạo truy vấn Mongoose với các điều kiện
   let query = Model.find(queryConditions);
+
+  // Áp dụng population nếu có
+  if (populate.length > 0) {
+    populate.forEach((pop) => {
+      query = query.populate({
+        path: pop.path,
+        select: pop.select || "name", // Mặc định lấy trường name nếu không chỉ định select
+      });
+    });
+  }
+
+  // await Class.find({}).populate({path: "teacherId", select: "username fullname, email"}).populate({path: "majorId", select: "name code"}).populate({})
 
   // Áp dụng sắp xếp
   const sortOrder = order === "desc" ? -1 : 1;

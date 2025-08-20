@@ -29,7 +29,7 @@ export const getClassByIdController = handleAsync(async (req, res) => {
   if (!classInstance) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
-  createResponse(res, 200, MESSAGES.CLASSES.GET_BY_ID_SUCCESS, classData);
+  createResponse(res, 200, MESSAGES.CLASSES.GET_BY_ID_SUCCESS, classInstance);
 });
 
 export const createClassController = handleAsync(async (req, res, next) => {

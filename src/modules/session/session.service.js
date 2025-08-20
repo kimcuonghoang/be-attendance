@@ -6,7 +6,12 @@ export const createSessionService = async (data) => {
 };
 
 export const getAllSessionsByClassId = async (classId) => {
-  const sessions = await Session.find({ classId }).sort({ sessionDate: 1 });
+  const sessions = await Session.find({ classId })
+    .sort({ sessionDate: 1 })
+    .populate([
+      { path: "classId", select: "name" },
+      // { path: "teacherId", select: "fullname" },
+    ]);
   return sessions;
 };
 

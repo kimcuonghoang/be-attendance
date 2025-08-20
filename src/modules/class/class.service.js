@@ -7,12 +7,11 @@ import Session from "../session/session.model.js";
 import { queryBuilder } from "../../common/utils/queryBuilder.js";
 
 export const getAllClassesService = async (query) => {
-  const { includeDeleted = true, ...queryParams } = query;
+  const { includeDeleted = false, ...queryParams } = query;
   const data = await queryBuilder(
     Class,
     {
       ...queryParams,
-     
       searchFields: ["name", "teacherId", "subjectId", "majorId"],
     },
     {
@@ -27,11 +26,11 @@ export const getAllClassesService = async (query) => {
 };
 
 export const getClassByIdService = async (id, data) => {
-  return await Class.findOne(
-    { _id: id, deletedAt: null },
-    { $set: data },
-    { new: true, runValidators: true }
-  ).populate("subjectId majorId teacherId studentIds");
+  return await Class.findOne({ _id: id, deletedAt: null }).populate([
+    { path: "teacherId", select: "fullname" },
+    { path: "subjectId", select: "name" },
+    { path: "majorId", select: "name" },
+  ]);
 };
 
 export const createClassService = async (dataCreate) => {
@@ -75,7 +74,6 @@ export const createClassService = async (dataCreate) => {
 export const updateClassService = async (id, dataUpdate) => {
   return await Class.findByIdAndUpdate(
     { _id: id, deletedAt: null },
-    { $set: { deletedAt: new Date() } },
     { new: true }
   );
 };

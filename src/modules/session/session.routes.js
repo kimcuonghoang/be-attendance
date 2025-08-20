@@ -16,7 +16,7 @@ import validBodyRequest from "../../common/middleware/validBody.middleware.js";
 const sessionRoutes = express.Router();
 
 // Public
-sessionRoutes.get("/classid/:classId", getAllSessionsByClassIdController);
+sessionRoutes.get("/classId/:classId", getAllSessionsByClassIdController);
 sessionRoutes.get("/:id", getSessionByIdController);
 
 // private
