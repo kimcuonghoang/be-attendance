@@ -31,3 +31,14 @@ const attendanceSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("Attendance", attendanceSchema);
+
+/**
+ {
+  studentId: {
+  name: 'Hoang Kim Cun'
+  studentId: 'cf2005'
+  }
+  status: "present",
+  note: "HOang kim cun di muon"
+ }
+ */

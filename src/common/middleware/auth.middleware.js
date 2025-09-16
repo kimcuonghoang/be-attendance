@@ -20,7 +20,11 @@ export const verifyUser = async (req, res, next) => {
     if (!user || user.deleteAt) {
       return next(401, "Tài khoản không tồi tại hoặc đã bị xóa");
     }
-    req.user = { id: decoded._id, role: user.role };
+    req.user = {
+      id: decoded.decoded.id,
+      _id: decoded.decoded.id,
+      role: user.role,
+    };
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {

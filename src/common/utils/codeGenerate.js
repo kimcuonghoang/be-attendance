@@ -45,6 +45,7 @@ export const generateStudentId = async () => {
     .select("studentId")
     .lean()
     .exec();
+  generateStudentId;
   if (!existingId || existingId.length === 0) {
     return `${prelix}001`;
   }

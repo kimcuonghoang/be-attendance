@@ -4,6 +4,7 @@ import {
   deleteClassController,
   getAllClassesController,
   getClassByIdController,
+  getStudentsByClassIdController,
   restoreClassController,
   softDeleteClassController,
   updateClassController,
@@ -21,7 +22,7 @@ const classRoutes = Router();
 // Public routes (accessible to all authenticated users)
 classRoutes.get("/", getAllClassesController);
 classRoutes.get("/:id", getClassByIdController);
-
+classRoutes.get("/:id/students", getStudentsByClassIdController);
 // admin routes (restricted to admin role)
 classRoutes.use(verifyUser);
 classRoutes.use(restrictTo(RoleEnum.SUPER_ADMIN));

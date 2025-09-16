@@ -6,20 +6,27 @@ export const createSessionService = async (data) => {
 };
 
 export const getAllSessionsByClassId = async (classId) => {
-  const sessions = await Session.find({ classId })
-    .sort({ sessionDate: 1 })
-    .populate([
-      { path: "classId", select: "name" },
-      // { path: "teacherId", select: "fullname" },
-    ]);
-  return sessions;
+  try {
+    const sessions = await Session.find({ classId })
+      .sort({ sessionDate: 1 })
+      .populate({
+        path: "classId",
+        populate: [
+          { path: "teacherId", select: "fullname" },
+          { path: "subjectId", select: "name" },
+          { path: "majorId", select: "name" },
+        ],
+      });
+
+    return sessions;
+  } catch (error) {
+    console.error("Error fetching sessions:", error);
+    throw error;
+  }
 };
 
 export const getSessionById = async (id) => {
-  const session = await Session.findById(id).populate({
-    path: "classId",
-    select: "name",
-  });
+  const session = await Session.findById(id).populate("classId");
   return session;
 };
 

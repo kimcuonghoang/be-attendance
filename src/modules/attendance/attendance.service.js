@@ -7,22 +7,35 @@ import User from "../user/user.model.js";
 import { RoleEnum, StatusEnum } from "../../common/constants/enums.js";
 import mongoose from "mongoose";
 import { queryBuilder } from "../../common/utils/queryBuilder.js";
-
 export const checkAttendanceStatus = async (sessionId, user) => {
   const sessionExists = await Session.findById(sessionId);
-  !sessionExists && createError(404, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
-  const classInstance = await Class.findById(sessionId.classId);
-  !classInstance && createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
+  if (!sessionExists) {
+    throw createError(404, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
+  }
+
+  const classInstance = await Class.findById(sessionExists.classId).populate(
+    "teacherId"
+  );
+  if (!classInstance) {
+    throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
+  }
+  const teacherIdStr = classInstance.teacherId
+    ? classInstance.teacherId._id.toString()
+    : null;
+  const rawUserId = user?._id || user?.id;
+  const userIdStr = rawUserId ? rawUserId.toString() : null;
 
   const checkTeacher =
     user.role === RoleEnum.TEACHER &&
-    classInstance.teacherId.toString() === user._id.toString();
-  !checkTeacher &&
-    user.role !== RoleEnum.SUPER_ADMIN &&
-    createError(
+    teacherIdStr &&
+    userIdStr &&
+    teacherIdStr === userIdStr;
+  if (!checkTeacher && user.role !== RoleEnum.SUPER_ADMIN) {
+    throw createError(
       403,
       `Bạn không phải giảng viên lớp này, bạn cũng không phải ${RoleEnum.SUPER_ADMIN}`
     );
+  }
 
   const existingAttendances = await Attendance.find({
     sessionId,
@@ -88,7 +101,7 @@ export const createAttendance = async (data, user) => {
     const attendanceDocs = classInstance.studentIds.map((studentId) => {
       const att = attendanceMap.get(studentId.toString()) || {
         studentId: studentId.toString(),
-        status: StatusEnum.ABSENT,
+        status: StatusEnum.ABSENT.toUpperCase(),
         note: "",
       };
       return {
@@ -106,7 +119,7 @@ export const createAttendance = async (data, user) => {
     session.endSession();
     return createAttendances;
   } catch (error) {
-    console.log(error);
+   
     await session.abortTransaction();
     session.endSession();
     throw createError(
@@ -121,7 +134,6 @@ export const updateAttendanceService = async (sessionId, data, user) => {
   session.startTransaction();
   try {
     const { attendances } = data;
-
     const sessionExists = await Session.findById(sessionId).session(session);
     !sessionExists && createError(404, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
     const classInstance = await Class.findById(sessionExists.classId).session(
@@ -161,8 +173,8 @@ export const updateAttendanceService = async (sessionId, data, user) => {
       const att = attendanceMap.get(studentId.toString());
       if (att) {
         const existingAttendance = await Attendance.findOne({
-          sessionId,
-          studentId,
+          sessionId: sessionId.toString(),
+          studentId: studentId.toString(),
           deletedAt: null,
         }).session(session);
 
@@ -171,7 +183,7 @@ export const updateAttendanceService = async (sessionId, data, user) => {
             404,
             `Điểm danh không tồn tại cho sinh viên ${studentId}`
           );
-        return Attendance.findByIdAndUpdate(
+        return Attendance.findOneAndUpdate(
           { sessionId, studentId, deletedAt: null },
           { status: att.status, note: att.note || "" },
           { new: true, session }
@@ -188,12 +200,12 @@ export const updateAttendanceService = async (sessionId, data, user) => {
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    throw createError(500, "Failed to update attendance");
+    throw createError(500, error);
   }
 };
 
 export const getAttendances = async (query, user) => {
-  const { sessionId, studentId, ...queryParams } = query;
+  const { sessionId, studentId, classId, ...queryParams } = query;
   const conditions = { deletedAt: null };
 
   user.role === RoleEnum.STUDENT && (conditions.studentId = user._id);
@@ -216,7 +228,7 @@ export const getAttendances = async (query, user) => {
     {
       populate: [
         { path: "sessionId", select: "sessionDate classId" },
-        { path: "studentId", select: "name subjectId teacherId" },
+        { path: "studentId", select: "fullname studentId" },
         { path: "sessionId.classId.subjectId", select: "name code" },
         { path: "sessionId.classId.teacherId", select: "fullname" },
       ],

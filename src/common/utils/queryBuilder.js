@@ -71,7 +71,6 @@ export const queryBuilder = async (Model, queryParams, options = {}) => {
   // Thực thi truy vấn
   const total = await Model.countDocuments(queryConditions);
   const data = await query.exec();
-
   if (!data || data.length === 0) {
     throw createError(404, "Not found");
   }

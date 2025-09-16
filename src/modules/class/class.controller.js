@@ -8,6 +8,7 @@ import {
   deleteClassService,
   getAllClassesService,
   getClassByIdService,
+  getStudentsByClassIdService,
   restoreClassService,
   softDeleteClassService,
   updateClassService,
@@ -47,6 +48,7 @@ export const updateClassController = handleAsync(async (req, res) => {
   if (!classInstance) {
     throw createError(404, MESSAGES.CLASSES.CLASS_NOT_FOUND);
   }
+
   createResponse(
     res,
 
@@ -94,4 +96,9 @@ export const deleteClassController = handleAsync(async (req, res) => {
     MESSAGES.CLASSES.CLASS_DELETED_SUCCESSFULLY,
     classInstance
   );
+});
+
+export const getStudentsByClassIdController = handleAsync(async (req, res) => {
+  const dataStudents = await getStudentsByClassIdService(req.params);
+  return createResponse(res, 200, "Success", dataStudents);
 });
