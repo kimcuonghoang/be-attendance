@@ -8,72 +8,86 @@ export const generateResetPasswordEmail = (resetLink, expiresIn) => {
     <title>Đặt lại mật khẩu</title>
     <style>
       body {
-        font-family: "Segoe UI", sans-serif;
-        background-color: #f2f4f8;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: #f4f6f9;
         margin: 0;
-        padding: 0;
+        padding: 20px;
+        color: #333;
       }
       .container {
-        max-width: 600px;
-        margin: 40px auto;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        max-width: 620px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
         overflow: hidden;
       }
       .header {
-        background-color: #2563eb;
+        background: linear-gradient(135deg, #2563eb, #1e40af);
         color: #ffffff;
         text-align: center;
-        padding: 30px 20px;
+        padding: 40px 20px;
       }
       .header img {
         max-width: 140px;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
       }
       .header h1 {
-        font-size: 24px;
+        font-size: 26px;
+        font-weight: 600;
         margin: 0;
       }
       .content {
-        padding: 30px;
-        color: #333333;
+        padding: 36px 32px;
       }
       .content h2 {
         font-size: 22px;
-        margin-top: 0;
-        margin-bottom: 10px;
+        margin: 0 0 12px;
+        color: #111827;
       }
       .content p {
-        font-size: 16px;
-        line-height: 1.6;
-        margin-bottom: 16px;
+        font-size: 15px;
+        line-height: 1.7;
+        margin: 0 0 16px;
+        color: #374151;
       }
       .button {
         display: inline-block;
         padding: 14px 28px;
-        background-color: #2563eb;
-        color: #ffffff;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #ffffff !important;
         text-decoration: none;
-        border-radius: 8px;
+        border-radius: 10px;
         font-weight: 600;
         font-size: 16px;
-        transition: background-color 0.3s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
       .button:hover {
-        background-color: #1d4ed8;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+      }
+      .link-box {
+        background: #f9fafb;
+        padding: 12px 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        word-break: break-all;
+        font-size: 14px;
       }
       .footer {
-        background-color: #f9fafb;
-        padding: 20px;
+        background: #f9fafb;
+        padding: 24px;
         text-align: center;
         font-size: 14px;
-        color: #666666;
+        color: #6b7280;
+      }
+      .footer p {
+        margin: 6px 0;
       }
       .footer a {
         color: #2563eb;
         text-decoration: none;
-        margin: 0 6px;
+        font-weight: 500;
       }
       .footer a:hover {
         text-decoration: underline;
@@ -88,20 +102,22 @@ export const generateResetPasswordEmail = (resetLink, expiresIn) => {
       </div>
       <div class="content">
         <h2>Xin chào,</h2>
-        <p>Bạn vừa yêu cầu đặt lại mật khẩu cho tài khoản của mình. Vui lòng nhấn vào nút bên dưới để tiến hành:</p>
-        <p style="text-align: center;">
+        <p>Bạn vừa gửi yêu cầu đặt lại mật khẩu cho tài khoản của mình. Vui lòng nhấn vào nút bên dưới để tiến hành:</p>
+        <p style="text-align: center; margin: 28px 0;">
           <a href="${resetLink}" class="button">Đặt lại mật khẩu</a>
         </p>
-        <p>Link này sẽ hết hạn sau <strong>${expiresIn}</strong>. Nếu bạn không thực hiện yêu cầu này, bạn có thể bỏ qua email.</p>
-        <p>Nếu nút không hoạt động, hãy sao chép và dán đường dẫn này vào trình duyệt:</p>
-        <p style="word-break: break-all;"><a href="${resetLink}">${resetLink}</a></p>
-        <p>Trân trọng,<br/>Đội ngũ CodeFarm</p>
+        <p>Link này sẽ hết hạn sau <strong>${expiresIn}</strong>. Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email.</p>
+        <p>Nếu nút không hoạt động, hãy sao chép và dán đường dẫn sau vào trình duyệt:</p>
+        <div class="link-box">
+          <a href="${resetLink}">${resetLink}</a>
+        </div>
+        <p style="margin-top: 24px;">Trân trọng,<br/>Đội ngũ CodeFarm</p>
       </div>
       <div class="footer">
         <p>&copy; ${new Date().getFullYear()} CodeFarm. All rights reserved.</p>
         <p>
-          <a href="https://codefarm.edu.vn">Trang chủ</a> |
-          <a href="mailto:support@codefarm.edu.vn">Liên hệ</a> |
+          <a href="https://codefarm.edu.vn">Trang chủ</a> •
+          <a href="mailto:support@codefarm.edu.vn">Liên hệ</a> •
           <a href="https://codefarm.edu.com/privacy">Chính sách bảo mật</a>
         </p>
         <p>Toà 7F đường Hà Lê - Kim Hoàng - Vân Canh - Hoài Đức - Hà Nội</p>

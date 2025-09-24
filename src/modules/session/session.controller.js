@@ -23,7 +23,11 @@ export const createSessionForClassController = handleAsync(async (req, res) => {
 
 export const getAllSessionsByClassIdController = handleAsync(
   async (req, res) => {
-    const sessions = await getAllSessionsByClassId(req.params.classId);
+    const sessions = await getAllSessionsByClassId(
+      req.params.classId,
+      req.query
+    );
+
     return createResponse(
       res,
       200,
@@ -34,7 +38,8 @@ export const getAllSessionsByClassIdController = handleAsync(
 );
 
 export const getSessionByIdController = handleAsync(async (req, res) => {
-  const session = await getSessionById(req.params.id);
+  const session = await getSessionById(req.params.id, req.query);
+
   if (!session) createError(400, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
   return createResponse(res, 200, MESSAGES.SESSIONS.GET_BY_ID_SUCCESS, session);
 });

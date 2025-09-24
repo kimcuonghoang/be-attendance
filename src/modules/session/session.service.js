@@ -1,28 +1,39 @@
 import Session from "./session.model.js";
+import createError from "./../../common/utils/error.js";
+import MESSAGES from "./../../common/constants/messages.js";
+import { queryBuilder } from "../../common/utils/queryBuilder.js";
 
 export const createSessionService = async (data) => {
   const session = await Session.create(data);
   return session;
 };
 
-export const getAllSessionsByClassId = async (classId) => {
-  try {
-    const sessions = await Session.find({ classId })
-      .sort({ sessionDate: 1 })
-      .populate({
-        path: "classId",
-        populate: [
-          { path: "teacherId", select: "fullname" },
-          { path: "subjectId", select: "name" },
-          { path: "majorId", select: "name" },
-        ],
-      });
+export const getAllSessionsByClassId = async (classId, query) => {
+  const { queryParams } = query;
+  const sessions = await queryBuilder(
+    Session,
+    {
+      ...queryParams,
+      classId,
+    },
+    {
+      populate: [
+        {
+          path: "classId",
+          select: "name teacherId subjectId room",
+          populate: {
+            path: "teacherId subjectId",
+            select: "fullname name",
+          },
+        },
+      ],
+    }
+  );
 
-    return sessions;
-  } catch (error) {
-    console.error("Error fetching sessions:", error);
-    throw error;
+  if (!sessions) {
+    throw createError(404, MESSAGES.SESSIONS.SESSION_NOT_FOUND);
   }
+  return sessions;
 };
 
 export const getSessionById = async (id) => {

@@ -36,6 +36,7 @@ export const updateAttendanceController = handleAsync(async (req, res) => {
 
 export const getAttendancesController = handleAsync(async (req, res) => {
   const data = await getAttendances(req.query, req.user);
+
   return createResponse(
     res,
     200,

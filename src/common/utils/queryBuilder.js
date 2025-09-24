@@ -52,6 +52,7 @@ export const queryBuilder = async (Model, queryParams, options = {}) => {
       query = query.populate({
         path: pop.path,
         select: pop.select || "name", // Mặc định lấy trường name nếu không chỉ định select
+        populate: pop.populate || null,
       });
     });
   }
@@ -71,6 +72,7 @@ export const queryBuilder = async (Model, queryParams, options = {}) => {
   // Thực thi truy vấn
   const total = await Model.countDocuments(queryConditions);
   const data = await query.exec();
+
   if (!data || data.length === 0) {
     throw createError(404, "Not found");
   }
