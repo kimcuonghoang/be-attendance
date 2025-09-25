@@ -1,9 +1,12 @@
 import { z } from "zod";
 export const updateRoleSchema = z.object({
-  role: z.enum(["admin", "teacher", "student"], {
-    required_error: "Role is required",
-    invalid_type_error: "Role must be admin, teacher, or student",
-  }),
+  role: z
+    .enum(["admin", "teacher", "student"], {
+      required_error: "Role is required",
+      invalid_type_error: "Role must be admin, teacher, or student",
+    })
+    .optional(),
+  majorId: z.string().optional(),
 });
 
 export const blockUserSchema = z.object({

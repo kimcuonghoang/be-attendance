@@ -33,6 +33,7 @@ const MESSAGES = {
     UPDATE_USER_ROLE: "Cập nhật role thành công",
     USER_RETRIEVED_SUCCESS: "Đã lấy người dùng thành công",
     GET_SUCCESS: "Lấy danh sách người dùng thành công",
+    USER_BLOCK_ADMIN: "Không thể block tài khoản admin",
   },
   MAJORS: {
     GET_ALL_SUCCESS: "Lấy danh sách chuyên ngành thành công",

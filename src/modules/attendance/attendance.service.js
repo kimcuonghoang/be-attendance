@@ -206,7 +206,7 @@ export const updateAttendanceService = async (sessionId, data, user) => {
 export const getAttendances = async (query, user) => {
   const { sessionId, studentId, classId, ...queryParams } = query;
   const conditions = { deletedAt: null };
-  console.log(user);
+
   user.role === RoleEnum.STUDENT && (conditions.studentId = user._id);
 
   if (user.role === RoleEnum.TEACHER) {

@@ -10,11 +10,13 @@ import { queryBuilder } from "./../../common/utils/queryBuilder.js";
 
 // * Update user role
 export const updateUserRole = async (userId, role) => {
-  const user = await User.findById(userId);
+  const user = await User.findById(userId).select("-password");
   if (!user) {
-    throw createError(404, "User not found");
+    throw createError(404, MESSAGES.USERS.USER_NOT_FOUND);
   }
-
+  if (user.role === "admin") {
+    throw createError(403, "Không thể chỉnh sửa vai trò của admin");
+  }
   if (role === "admin") {
     throw createError(400, MESSAGES.USERS.UNAUTHORIZED);
   }
@@ -30,7 +32,9 @@ export const blockUser = async (userId, isBlocked) => {
   if (!user) {
     throw createError(404, MESSAGES.USERS.USER_NOT_FOUND);
   }
-
+  if (user.role === "admin") {
+    throw createError(403, MESSAGES.USERS.USER_BLOCK_ADMIN);
+  }
   user.isBlocked = isBlocked;
   user.updatedAt = new Date();
   return user.save();

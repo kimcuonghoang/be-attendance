@@ -17,6 +17,7 @@ import {
   blockUserSchema,
   createUserSchema,
   updateProfileSchema,
+  updateRoleSchema,
 } from "./use.schema.js";
 
 const userRoutes = Router();
@@ -36,7 +37,7 @@ userRoutes.get("/:userId", getUserController);
 userRoutes.get("/", getAllUsersController);
 userRoutes.patch(
   "/role/:userId",
-  validBodyRequest(updateProfileSchema),
+  validBodyRequest(updateRoleSchema),
   updateRoleController
 );
 userRoutes.patch(
